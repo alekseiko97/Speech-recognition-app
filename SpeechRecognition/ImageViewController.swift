@@ -9,24 +9,22 @@
 import UIKit
 import Speech
 
-class ViewController: UIViewController, SFSpeechRecognizerDelegate {
+class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
     
-    // Variables
+    // Constants
     let speechRecognizer = SFSpeechRecognizer()
-    var authStatus = SFSpeechRecognizer.authorizationStatus()
-    /* A group of connected audio node objects used to generate and process audio signals a and perform audio input and output
-     */
+    // A group of connected audio node objects used to generate and process audio signals a and perform audio input and output
     let audioEngine = AVAudioEngine()
     let request = SFSpeechAudioBufferRecognitionRequest()
+    
+    // Variables
+    var authStatus = SFSpeechRecognizer.authorizationStatus()
     var recognitionTask: SFSpeechRecognitionTask?
     
     // Outlets
     @IBOutlet weak var recordButton: UIButton!
-    @IBOutlet weak var cancelRecordButton: UIButton!
-    @IBOutlet weak var recognizedTextView: UITextView!
     @IBOutlet weak var statusLabel: UILabel!
-    
-    
+    @IBOutlet weak var imageView: UIImageView!
     
     func askPermission() {
         // The authorization status results in changes to the
@@ -110,13 +108,27 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         // Analyze the speech
         recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, error in
             if let result = result {
-                self.recognizedTextView.text = result.bestTranscription.formattedString
                 print(result)
-                // do something with text
+                let recognizedText = result.bestTranscription.formattedString
+                self.statusLabel.text = recognizedText
+                self.manipulateImage(command: recognizedText)
             } else if let error = error {
                 print(error)
             }
         })
+    }
+    
+    func manipulateImage(command: String) {
+        switch command {
+            // use nlp here
+        case "Left":
+            let newImage = imageView.image?.rotate(radians: .pi/2)
+            self.imageView.image = newImage
+        //case "right":
+        //case "zoom":
+        default:
+            return
+        }
     }
     
     @IBAction func recordButtonTapped(_ sender: UIButton) {
@@ -143,6 +155,30 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         stopRecording()
     }
     
+}
+
+extension UIImage {
+    func rotate(radians: Float) -> UIImage? {
+        var newSize = CGRect(origin: CGPoint.zero, size: self.size).applying(CGAffineTransform(rotationAngle: CGFloat(radians))).size
+        // Trim off the extremely small float value to prevent core graphics from rounding it up
+        newSize.width = floor(newSize.width)
+        newSize.height = floor(newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, true, self.scale)
+        let context = UIGraphicsGetCurrentContext()!
+        
+        // Move origin to middle
+        context.translateBy(x: newSize.width/2, y: newSize.height/2)
+        // Rotate around middle
+        context.rotate(by: CGFloat(radians))
+        // Draw the image at its center
+        self.draw(in: CGRect(x: -self.size.width/2, y: -self.size.height/2, width: self.size.width, height: self.size.height))
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
 }
 
 
