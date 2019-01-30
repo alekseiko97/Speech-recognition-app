@@ -99,7 +99,7 @@
                                     <action selector="recordButtonTapped:" destination="f1h-f7-C0x" eventType="touchUpInside" id="enj-6K-Vu0"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Jaguar" translatesAutoresizingMaskIntoConstraints="NO" id="g8C-Me-qQK">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Jaguar" translatesAutoresizingMaskIntoConstraints="NO" id="g8C-Me-qQK">
                                 <rect key="frame" x="14" y="130" width="386" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>

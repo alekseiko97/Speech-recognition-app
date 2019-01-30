@@ -90,7 +90,7 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
     func startRecording() {
         // Setup audio engine and speech recognizer
         let node = audioEngine.inputNode
-        let recordingFormat = node.outputFormat(forBus: 0)
+        let recordingFormat = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1)
         node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
             self.request.append(buffer)
         }
@@ -115,6 +115,13 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
                 print(error)
             }
         })
+    }
+    
+    func stopRecording() {
+        audioEngine.inputNode.removeTap(onBus: 0)
+        audioEngine.stop()
+        request.endAudio()
+        //recordButton.isEnabled = false
     }
     
     func manipulateImage(command: String, value: Double?) {
@@ -158,13 +165,13 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
         return nil
     }
             
-            //    func lemmatization(for text: String) {
-            //        let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
-            //        let tagger = NSLinguisticTagger(tagSchemes: [.tokenType, .language, .lexicalClass, .nameType, .lemma], options: Int(options.rawValue))
-            //        tagger.string = text
-            //        let range = NSRange.init(location: 0, length: text.utf16.count)
-            //        tagger.enumerateTags(in: range, unit: .word, scheme: .lemma, options: options, using: tag,)
-            //    }
+    //    func lemmatization(for text: String) {
+    //        let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
+    //        let tagger = NSLinguisticTagger(tagSchemes: [.tokenType, .language, .lexicalClass, .nameType, .lemma], options: Int(options.rawValue))
+    //        tagger.string = text
+    //        let range = NSRange.init(location: 0, length: text.utf16.count)
+    //        tagger.enumerateTags(in: range, unit: .word, scheme: .lemma, options: options, using: tag,)
+    //    }
             
     @IBAction func recordButtonTapped(_ sender: UIButton) {
         if audioEngine.isRunning {
@@ -184,15 +191,7 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     @IBAction func rightTapped(_ sender: UIButton) {
-        manipulateImage(command: "adjust exposure", value: 0.5)
-    }
-    
-    
-    func stopRecording() {
-        audioEngine.inputNode.removeTap(onBus: 0)
-        audioEngine.stop()
-        request.endAudio()
-        //recordButton.isEnabled = false
+        manipulateImage(command: "Right", value: nil)
     }
     
 }
