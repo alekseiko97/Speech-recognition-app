@@ -100,7 +100,6 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
         do {
             try audioEngine.start()
             print("Go ahead, I'm listening")
-            //self.status = .recognizing
         } catch {
             return print(error)
         }
@@ -111,26 +110,62 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
                 print(result)
                 let recognizedText = result.bestTranscription.formattedString
                 self.statusLabel.text = recognizedText
-                self.manipulateImage(command: recognizedText)
+                self.manipulateImage(command: recognizedText, value: nil)
             } else if let error = error {
                 print(error)
             }
         })
     }
     
-    func manipulateImage(command: String) {
+    func manipulateImage(command: String, value: Double?) {
+        let newImage: UIImage?
+        let originalImage = imageView.image
+        
         switch command {
-            // use nlp here
-        case "Left":
-            let newImage = imageView.image?.rotate(radians: .pi/2)
+        // use nlp here
+        case "Left", "left":
+            newImage = imageView.image?.rotate(radians: .pi/2)
             self.imageView.image = newImage
-        //case "right":
-        //case "zoom":
+        case "Right", "right":
+            newImage = imageView.image?.rotate(radians: -(.pi/2))
+            self.imageView.image = newImage
+        case "adjust exposure", "Adjust exposure":
+            let processedImage = applyFilter(to: imageView.image!, filterName: "CIExposureAdjust", value: 0.5)
+            self.imageView.image = processedImage
+        case "reset", "Reset":
+            self.imageView.image = originalImage
         default:
             return
         }
     }
     
+    func applyFilter(to image: UIImage, filterName: String, value: Double) -> UIImage? {
+        let context = CIContext(options: nil)
+        
+        if let filter = CIFilter(name: filterName) {
+            let beginImage = CIImage(image: image)
+            filter.setValue(beginImage, forKey: kCIInputImageKey)
+            filter.setValue(value, forKey: kCIInputEVKey)
+            
+            if let output = filter.outputImage {
+                if let cgImg = context.createCGImage(output, from: output.extent) {
+                    let processedImage = UIImage(cgImage: cgImg)
+                    return processedImage
+                }
+            }
+        }
+        //return UIImage.init()
+        return nil
+    }
+            
+            //    func lemmatization(for text: String) {
+            //        let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
+            //        let tagger = NSLinguisticTagger(tagSchemes: [.tokenType, .language, .lexicalClass, .nameType, .lemma], options: Int(options.rawValue))
+            //        tagger.string = text
+            //        let range = NSRange.init(location: 0, length: text.utf16.count)
+            //        tagger.enumerateTags(in: range, unit: .word, scheme: .lemma, options: options, using: tag,)
+            //    }
+            
     @IBAction func recordButtonTapped(_ sender: UIButton) {
         if audioEngine.isRunning {
             stopRecording()
@@ -144,15 +179,20 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
         
     }
     
+    @IBAction func leftTapped(_ sender: UIButton) {
+        manipulateImage(command: "Left", value: nil)
+    }
+    
+    @IBAction func rightTapped(_ sender: UIButton) {
+        manipulateImage(command: "adjust exposure", value: 0.5)
+    }
+    
+    
     func stopRecording() {
         audioEngine.inputNode.removeTap(onBus: 0)
         audioEngine.stop()
         request.endAudio()
         //recordButton.isEnabled = false
-    }
-    
-    @IBAction func cancelRecordTapped(_ sender: UIButton) {
-        stopRecording()
     }
     
 }
