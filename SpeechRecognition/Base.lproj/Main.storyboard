@@ -6,6 +6,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,30 +20,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HyL-wF-kCR">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HyL-wF-kCR">
                                 <rect key="frame" x="177" y="661" width="59" height="75"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="LZn-xe-gFQ"/>
+                                </constraints>
                                 <state key="normal" image="startRecordIcon"/>
                                 <connections>
                                     <action selector="recordButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oSG-DN-H7a"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Jaguar" translatesAutoresizingMaskIntoConstraints="NO" id="TSu-qJ-5cM">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Jaguar" translatesAutoresizingMaskIntoConstraints="NO" id="TSu-qJ-5cM">
                                 <rect key="frame" x="20" y="107" width="374" height="220"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FT0-4b-ACg">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FT0-4b-ACg">
                                 <rect key="frame" x="8" y="400" width="397" height="178"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <mutableString key="text">Press "Microphone" button to start recording your voice. Below is the list of commands that can be applied to the image:   - Left: rotate image to the left - Right: rotate image to the right - Adjust exposure: increase brigthness - Reset: set the original image</mutableString>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
+                                <string key="text">Press "Microphone" button to start recording your voice. Below is the list of commands that can be applied to the image:   - Left: rotate image to the left - Right: rotate image to the right - Adjust: increase brigthness - Reset: set the original image</string>
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rx6-Yf-jOY">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rx6-Yf-jOY">
                                 <rect key="frame" x="8" y="155" width="31" height="154"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.15294117647058825" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="154" id="a6Q-Bs-nol"/>
+                                    <constraint firstAttribute="width" constant="31" id="ghU-dP-X7b"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="29"/>
                                 <state key="normal" title="&lt;">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -50,10 +58,12 @@
                                     <action selector="leftTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="813-1W-Nda"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3a-Pj-4q9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3a-Pj-4q9">
                                 <rect key="frame" x="374" y="155" width="31" height="154"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="31" id="FNY-x0-RWk"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="29"/>
                                 <state key="normal" title="&gt;">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -62,15 +72,38 @@
                                     <action selector="rightTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bWE-b9-egO"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current status: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Grv-iI-EVr">
-                                <rect key="frame" x="8" y="596" width="240" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current status: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Grv-iI-EVr">
+                                <rect key="frame" x="20" y="594" width="240" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="lxw-nD-UFi"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="rx6-Yf-jOY" firstAttribute="leading" secondItem="FT0-4b-ACg" secondAttribute="leading" id="2Ij-jP-D9f"/>
+                            <constraint firstItem="Grv-iI-EVr" firstAttribute="top" secondItem="FT0-4b-ACg" secondAttribute="bottom" constant="16" id="8pU-d9-ykQ"/>
+                            <constraint firstItem="rx6-Yf-jOY" firstAttribute="baseline" secondItem="w3a-Pj-4q9" secondAttribute="firstBaseline" id="CDk-Tr-uF8"/>
+                            <constraint firstItem="rx6-Yf-jOY" firstAttribute="top" secondItem="w3a-Pj-4q9" secondAttribute="top" id="DsO-mr-ujI"/>
+                            <constraint firstItem="TSu-qJ-5cM" firstAttribute="leading" secondItem="Grv-iI-EVr" secondAttribute="leading" id="EFH-VS-9ha"/>
+                            <constraint firstItem="TSu-qJ-5cM" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="43" id="Oda-X2-zPg"/>
+                            <constraint firstItem="TSu-qJ-5cM" firstAttribute="centerX" secondItem="FT0-4b-ACg" secondAttribute="centerX" id="QLK-os-PnR"/>
+                            <constraint firstItem="TSu-qJ-5cM" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Qv2-K4-WBp"/>
+                            <constraint firstItem="HyL-wF-kCR" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="RF9-cv-khL"/>
+                            <constraint firstItem="FT0-4b-ACg" firstAttribute="centerX" secondItem="HyL-wF-kCR" secondAttribute="centerX" id="RLQ-eF-g5g"/>
+                            <constraint firstItem="FT0-4b-ACg" firstAttribute="top" secondItem="rx6-Yf-jOY" secondAttribute="bottom" constant="91" id="a7H-bu-MMb"/>
+                            <constraint firstItem="TSu-qJ-5cM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="bzW-W0-9aV"/>
+                            <constraint firstItem="rx6-Yf-jOY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="ecG-mX-njn"/>
+                            <constraint firstItem="rx6-Yf-jOY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="91" id="hXB-cn-BUE"/>
+                            <constraint firstItem="w3a-Pj-4q9" firstAttribute="trailing" secondItem="FT0-4b-ACg" secondAttribute="trailing" id="nk8-I3-kqX"/>
+                            <constraint firstItem="FT0-4b-ACg" firstAttribute="top" secondItem="TSu-qJ-5cM" secondAttribute="bottom" constant="73" id="pET-Gc-gzS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Grv-iI-EVr" secondAttribute="trailing" constant="154" id="tHa-2h-led"/>
+                            <constraint firstItem="HyL-wF-kCR" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="177" id="tlR-Ma-rL4"/>
+                            <constraint firstItem="HyL-wF-kCR" firstAttribute="top" secondItem="Grv-iI-EVr" secondAttribute="bottom" constant="33" id="x93-2o-XW0"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>

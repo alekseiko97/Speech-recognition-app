@@ -56,6 +56,7 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         // Configure the SFSpeechRecognizer object already
         // stored in a local member variable.
         speechRecognizer?.delegate = self
@@ -109,8 +110,9 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
             if let result = result {
                 print(result)
                 let recognizedText = result.bestTranscription.formattedString
+                let tokenizedText = self.tokenizeText(for: recognizedText)
                 self.statusLabel.text = recognizedText
-                self.manipulateImage(command: recognizedText, value: nil)
+                self.manipulateImage(tokenizedText: tokenizedText)
             } else if let error = error {
                 print(error)
             }
@@ -121,29 +123,36 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
         audioEngine.inputNode.removeTap(onBus: 0)
         audioEngine.stop()
         request.endAudio()
-        //recordButton.isEnabled = false
     }
     
-    func manipulateImage(command: String, value: Double?) {
-        let newImage: UIImage?
+    func manipulateImage(tokenizedText: [String]) {
+        var newImage: UIImage?
         let originalImage = imageView.image
         
-        switch command {
-        // use nlp here
-        case "Left", "left":
-            newImage = imageView.image?.rotate(radians: .pi/2)
-            self.imageView.image = newImage
-        case "Right", "right":
-            newImage = imageView.image?.rotate(radians: -(.pi/2))
-            self.imageView.image = newImage
-        case "adjust exposure", "Adjust exposure":
-            let processedImage = applyFilter(to: imageView.image!, filterName: "CIExposureAdjust", value: 0.5)
-            self.imageView.image = processedImage
-        case "reset", "Reset":
-            self.imageView.image = originalImage
-        default:
-            return
+        for word in tokenizedText {
+            switch word {
+            case "Left".lowercased():
+                newImage = imageView.image?.rotate(radians: .pi/2)
+                self.imageView.image = newImage
+            case "Right".lowercased():
+                newImage = imageView.image?.rotate(radians: -(.pi/2))
+                self.imageView.image = newImage
+            // Adjust exposure
+            case "Adjust".lowercased():
+                let processedImage = applyFilter(to: imageView.image!, filterName: "CIExposureAdjust", value: 0.5)
+                self.imageView.image = processedImage
+            case "Reset".lowercased():
+                self.imageView.image = originalImage
+            default:
+                return
+            }
         }
+//
+//        UIView.animate(withDuration: 0.1, animations: ({
+//
+//            self.imageView.transform = CGAffineTransform.init(rotationAngle: 90)
+//
+//            }))
     }
     
     func applyFilter(to image: UIImage, filterName: String, value: Double) -> UIImage? {
@@ -164,15 +173,21 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
         //return UIImage.init()
         return nil
     }
-            
-    //    func lemmatization(for text: String) {
-    //        let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
-    //        let tagger = NSLinguisticTagger(tagSchemes: [.tokenType, .language, .lexicalClass, .nameType, .lemma], options: Int(options.rawValue))
-    //        tagger.string = text
-    //        let range = NSRange.init(location: 0, length: text.utf16.count)
-    //        tagger.enumerateTags(in: range, unit: .word, scheme: .lemma, options: options, using: tag,)
-    //    }
-            
+    
+    func tokenizeText(for text: String) -> [String] {
+        var words = [String]()
+        let options: NSLinguisticTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
+        let tagger = NSLinguisticTagger(tagSchemes: [.tokenType, .language, .lexicalClass, .nameType, .lemma], options: Int(options.rawValue))
+        tagger.string = text
+        let range = NSRange.init(location: 0, length: text.utf16.count)
+        tagger.enumerateTags(in: range, unit: .word, scheme: .tokenType, options: options) { tag, tokenRange, stop in
+            let word = (text as NSString).substring(with: tokenRange)
+            words.append(word)
+        }
+        
+        return words
+    }
+    
     @IBAction func recordButtonTapped(_ sender: UIButton) {
         if audioEngine.isRunning {
             stopRecording()
@@ -180,18 +195,18 @@ class ImageViewController: UIViewController, SFSpeechRecognizerDelegate {
             print("Stopped recording")
         } else {
             startRecording()
-            statusLabel.text = "Recording has started"
+            statusLabel.text = "Started recording"
             print("Recording has started")
         }
         
     }
     
     @IBAction func leftTapped(_ sender: UIButton) {
-        manipulateImage(command: "Left", value: nil)
+        manipulateImage(tokenizedText: ["left"])
     }
     
     @IBAction func rightTapped(_ sender: UIButton) {
-        manipulateImage(command: "Right", value: nil)
+        manipulateImage(tokenizedText: ["Right"])
     }
     
 }
@@ -217,6 +232,20 @@ extension UIImage {
         UIGraphicsEndImageContext()
         
         return newImage
+    }
+}
+
+extension UIView {
+    func rotateImage(duration: CFTimeInterval = 1.0, angle: Int, completionDelegate: AnyObject? = nil) {
+        let rotateAnimation = CABasicAnimation(keyPath: "transform.rotation")
+        rotateAnimation.fromValue = 0.0
+        rotateAnimation.toValue = CGFloat(angle)
+        rotateAnimation.duration = duration
+        
+        if let delegate: CAAnimationDelegate = completionDelegate as! CAAnimationDelegate? {
+            rotateAnimation.delegate = delegate
+        }
+        self.layer.add(rotateAnimation, forKey: nil)
     }
 }
 
